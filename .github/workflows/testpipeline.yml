@@ -100,13 +100,13 @@ jobs:
       - name: Install Terraform
         uses: hashicorp/setup-terraform@v2
       
-      - name: Install Azure CLI
-        run: |
-          curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
-          az --version
+      # - name: Install Azure CLI
+      #   run: |
+      #     curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+      #     az --version
 
-      - name: Azure Login
-        run: az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
+      # - name: Azure Login
+      #   run: az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
 
       - name: Terraform Init
         working-directory: infra/deployment
@@ -126,10 +126,10 @@ jobs:
           TF_VAR_frontend_image: ${{ env.FRONTEND_IMAGE }}
           TF_VAR_frontend_image_tag: ${{ env.TAG_VERSION }}
           TF_VAR_acr_name: ${{ env.ACR_NAME }}
-          TF_ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-          TF_ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          TF_ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-          TF_ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
 
   cleanup:
     runs-on: ubuntu-latest
