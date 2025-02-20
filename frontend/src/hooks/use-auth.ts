@@ -34,7 +34,7 @@ export const useAuth = () => {
 
   const loginMutation = useMutation({
     mutationFn: async ({ email, password }: LoginData) => {
-      const response = await axios.post(`$/api/login`, {
+      const response = await axios.post(`/api/login`, {
         email,
         password
       })
