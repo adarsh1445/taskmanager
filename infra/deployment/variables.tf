@@ -105,3 +105,8 @@ variable "pfx_path" {
 variable "waf_mode" {
   default = "Prevention" # Can be "Detection" or "Prevention"
 }
+
+variable "client_id" {}
+variable "client_secret" {}
+variable "tenant_id" {}
+variable "subscription_id" {}
