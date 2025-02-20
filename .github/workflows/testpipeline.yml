@@ -131,12 +131,11 @@ jobs:
   cleanup:
     runs-on: ubuntu-latest
     if: always()
-    needs: ${{ 
-      startsWith(github.ref, 'refs/tags/') 
-        ? ['build-push-tagged', 'deploy-infrastructure'] 
-        : (github.event_name == 'push' && github.ref == 'refs/heads/main' 
-          ? ['run-tests', 'build-push-latest'] 
-          : ['run-tests']) }}
+    needs:
+      - run-tests
+      - build-push-latest
+      - build-push-tagged
+      - deploy-infrastructure
     steps:
       - name: Prune Docker resources
         run: |
