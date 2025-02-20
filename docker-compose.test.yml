@@ -1,0 +1,39 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:15
+    volumes: []
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: testdatabase
+   
+  frontend:
+    image: node:20
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - ./tmp/:/root/.npm/_logs/
+    working_dir: /app
+    command: sh -c " npm install && npm run start"
+ 
+
+  backend:
+    build: 
+      context: .
+      dockerfile: ./docker/dockerfile.api
+    ports:
+      - "8000:8000"
+    working_dir: /app
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/testdatabase
+      - SECRET_KEY=${SECRET_KEY}
+    depends_on:
+      - postgres
+    command: >
+      sh -c "pip install -r requirements.txt && 
+             python main.py"

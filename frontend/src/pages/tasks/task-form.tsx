@@ -4,11 +4,11 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 import type { Task } from "./task-dashboard"
-import { Button } from "@/components/ui/button"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Textarea } from "@/components/ui/textarea"
+import { Button } from "../../components/ui/button"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../../components/ui/form"
+import { Input } from "../../components/ui/input"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../components/ui/select"
+import { Textarea } from "../../components/ui/textarea"
 
 const formSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -47,7 +47,7 @@ export function TaskForm({ task, onSubmit }: TaskFormProps) {
             <FormItem>
               <FormLabel>Title</FormLabel>
               <FormControl>
-                <Input placeholder="Enter task title" {...field} />
+                <Input data-testid="input-title" placeholder="Enter task title" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -60,7 +60,7 @@ export function TaskForm({ task, onSubmit }: TaskFormProps) {
             <FormItem>
               <FormLabel>Description</FormLabel>
               <FormControl>
-                <Textarea placeholder="Enter task description" {...field} />
+                <Textarea data-testid="input-description" placeholder="Enter task description" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -73,7 +73,7 @@ export function TaskForm({ task, onSubmit }: TaskFormProps) {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Status</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <Select data-testid="select-status" onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Select status" />
@@ -95,7 +95,7 @@ export function TaskForm({ task, onSubmit }: TaskFormProps) {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Priority</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <Select data-testid="select-priority" onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Select priority" />
@@ -120,7 +120,7 @@ export function TaskForm({ task, onSubmit }: TaskFormProps) {
               <FormItem>
                 <FormLabel>Due Date</FormLabel>
                 <FormControl>
-                  <Input type="date" {...field} />
+                  <Input data-testid="input-due-date" type="date" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -133,7 +133,7 @@ export function TaskForm({ task, onSubmit }: TaskFormProps) {
               <FormItem>
                 <FormLabel>Assignee</FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter assignee name" {...field} />
+                  <Input data-testid="input-assignee" placeholder="Enter assignee name" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -141,10 +141,9 @@ export function TaskForm({ task, onSubmit }: TaskFormProps) {
           />
         </div>
         <div className="flex justify-end gap-4">
-          <Button type="submit">{task ? "Update" : "Create"} Task</Button>
+          <Button data-testid="submit-task" type="submit">{task ? "Update" : "Create"} Task</Button>
         </div>
       </form>
     </Form>
   )
 }
-
