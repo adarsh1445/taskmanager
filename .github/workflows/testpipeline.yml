@@ -58,8 +58,8 @@ jobs:
       
       - name: Build and push latest images
         run: |
-          docker-compose -f docker-compose.yml build
-          docker-compose -f docker-compose.yml push
+          docker-compose -f docker-compose.build.yml build
+          docker-compose -f docker-compose.build.yml push
         env:
           BACKEND_IMAGE_TAG: "latest"
           FRONTEND_IMAGE_TAG: "latest"
@@ -91,8 +91,8 @@ jobs:
       
       - name: Build and push versioned images
         run: |
-          docker-compose -f docker-compose.yml build
-          docker-compose -f docker-compose.yml push
+          docker-compose -f docker-compose.build.yml build
+          docker-compose -f docker-compose.build.yml push
         env:
           BACKEND_IMAGE_TAG: ${{ env.TAG_VERSION }}
           FRONTEND_IMAGE_TAG: ${{ env.TAG_VERSION }}
