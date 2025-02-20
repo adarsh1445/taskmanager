@@ -135,11 +135,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: run-tests
     steps:
-      - name: Clean up directories
-        run: |
-          [ -d "data" ] && sudo rm -rf data
-          [ -d "tmp" ] && sudo rm -rf tmp
-      
       - name: Prune Docker resources
         run: |
           docker container prune -f
