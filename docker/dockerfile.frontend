@@ -1,0 +1,26 @@
+# Use an official lightweight Node.js image
+FROM node:20-slim
+
+WORKDIR /app
+
+# Copy package.json and package-lock.json first for better caching
+COPY frontend/package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy frontend source code
+COPY frontend .
+
+ARG VITE_API_BASE_URL
+#ENV VITE_API_BASE_URL $VITE_API_BASE_URL
+
+ENV VITE_API_BASE_URL="https://processitytaskmanagerdemo.info"
+
+
+# Expose port 80 for Azure App Service
+EXPOSE 80
+
+# Serve the static files on port 80 (Azure requires this)
+# CMD ["serve", "-s", "dist", "-l", "80"]
+CMD ["npm","run","start"]

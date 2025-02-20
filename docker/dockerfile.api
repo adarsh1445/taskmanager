@@ -1,0 +1,20 @@
+# Use a lightweight Python image
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Copy and install dependencies
+COPY ./backend/app/requirements.txt /app/
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy the application code
+COPY ./backend/app /app/
+
+# Set environment variables (will be overridden in Azure)
+ENV DATABASE_URL="postgresql://user:password@localhost/dbname"
+
+# Expose port 8000 for backend API
+EXPOSE 8000
+
+# Run the application on port 8000
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]

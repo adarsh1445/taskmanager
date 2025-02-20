@@ -1,0 +1,11 @@
+tmp/*
+data/*
+infra/acr/terraform.tfstate
+infra/acr/terraform.tfstate.backup
+infra/acr/.terraform
+infra/acr/.terraform.lock.hcl
+infra/deployment/terraform.tfstate
+infra/deployment/terraform.tfstate.backup
+infra/deployment/.terraform
+infra/deployment/.terraform.lock.hcl
+infra/deployment/certificate.pfx
