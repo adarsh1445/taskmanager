@@ -12,12 +12,11 @@ export default defineConfig({
     
   },
   server: {
-    port: process.env.DEV_PORT || 80,
     allowedHosts: ['6c68-2401-4900-1ce1-ec19-7dc8-e65c-ff68-81c5.ngrok-free.app'],
     host: true,
     proxy: {
       '/api': {
-        target: process.env.VITE_API_BASE_URL || 'http://backend:8000',
+        target: 'http://backend:8000',
         changeOrigin: true,
         // secure: false,
       ws: true,

@@ -56,6 +56,8 @@ resource "azurerm_linux_web_app" "backend" {
   service_plan_id     = azurerm_service_plan.app_service_plan.id
 
   site_config {
+    container_registry_use_managed_identity = true
+
     application_stack {
       docker_image_name   = "${var.backend_image}:${var.backend_image_tag}"
       docker_registry_url = "https://${data.azurerm_container_registry.acr.login_server}"
@@ -65,7 +67,7 @@ resource "azurerm_linux_web_app" "backend" {
   }
 
   app_settings = {
-    "DATABASE_URL"  = "postgresql://${var.admin_username}:${var.admin_password}@${azurerm_postgresql_flexible_server.postgres.fqdn}:5432/${var.postgres_db_name}?sslmode=require"
+    "DATABASE_URL"  = "postgresql://${var.admin_username}:${var.admin_password}@${azurerm_postgresql_flexible_server.postgres.fqdn}:5432/postgres?sslmode=require"
     "WEBSITES_PORT" = "8000"
 
   }
@@ -88,12 +90,14 @@ resource "azurerm_linux_web_app" "frontend" {
   service_plan_id     = azurerm_service_plan.app_service_plan.id
 
   site_config {
+    container_registry_use_managed_identity = true
+
     application_stack {
       docker_image_name   = "${var.frontend_image}:${var.frontend_image_tag}"
       docker_registry_url = "https://${data.azurerm_container_registry.acr.login_server}"
     }
 
-    app_command_line = "npm run start"
+    app_command_line = "serve -s dist -l 80"
   }
 
   app_settings = {

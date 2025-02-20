@@ -91,7 +91,7 @@ resource "azurerm_web_application_firewall_policy" "appgw_waf" {
 
 
 resource "azurerm_application_gateway" "main" {
-  name                = "appgw-${var.domain_name}"
+  name                = "prod-appgw-${var.domain_name}"
   resource_group_name = data.azurerm_resource_group.existing.name
   location            = data.azurerm_resource_group.existing.location
 
@@ -167,7 +167,7 @@ resource "azurerm_application_gateway" "main" {
     name                = "frontend-probe"
     host                = azurerm_linux_web_app.frontend.default_hostname
     path                = "/"
-    protocol            = "Http"
+    protocol            = "Https"
     interval            = 30
     timeout             = 30
     unhealthy_threshold = 3
@@ -176,8 +176,8 @@ resource "azurerm_application_gateway" "main" {
   probe {
     name                = "backend-probe"
     host                = azurerm_linux_web_app.backend.default_hostname
-    path                = "/api/health"
-    protocol            = "Http"
+    path                = "/"
+    protocol            = "Https"
     interval            = 30
     timeout             = 30
     unhealthy_threshold = 3
@@ -187,8 +187,8 @@ resource "azurerm_application_gateway" "main" {
   backend_http_settings {
     name                  = "frontend-settings"
     cookie_based_affinity = "Disabled"
-    port                  = 80
-    protocol              = "Http"
+    port                  = 443
+    protocol              = "Https"
     request_timeout       = 60
     probe_name            = "frontend-probe"
   }
@@ -196,8 +196,8 @@ resource "azurerm_application_gateway" "main" {
   backend_http_settings {
     name                  = "backend-settings"
     cookie_based_affinity = "Disabled"
-    port                  = 80
-    protocol              = "Http"
+    port                  = 443
+    protocol              = "Https"
     request_timeout       = 60
     probe_name            = "backend-probe"
   }
@@ -211,6 +211,15 @@ resource "azurerm_application_gateway" "main" {
 
     url_path_map_name = "url-path-map"
   }
+
+  request_routing_rule {
+    name               = "http-rule" # Add this if missing
+    rule_type          = "Basic"
+    http_listener_name = "http-listener"
+    priority           = 1
+    url_path_map_name  = "url-path-map"
+  }
+
 
   url_path_map {
     name                               = "url-path-map"
@@ -258,8 +267,8 @@ resource "azurerm_key_vault_access_policy" "appgw" {
   tenant_id    = data.azurerm_client_config.current.tenant_id
   object_id    = azurerm_user_assigned_identity.appgw.principal_id
 
-  # Correct from certificate_permissions to secret_permissions
   secret_permissions = [
     "Get"
   ]
+  certificate_permissions = ["Get"]
 }

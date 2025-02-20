@@ -9,3 +9,4 @@ infra/deployment/terraform.tfstate.backup
 infra/deployment/.terraform
 infra/deployment/.terraform.lock.hcl
 infra/deployment/certificate.pfx
+infra/deployment/.terraform.tfstate.lock.info

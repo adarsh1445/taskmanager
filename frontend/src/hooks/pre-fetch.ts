@@ -2,7 +2,6 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import axios from 'axios'
 
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || ""
 
 interface Task {
   id: string
@@ -20,7 +19,7 @@ export const useTasks = () => {
   const { data: tasks, isLoading, error } = useQuery<Task[]>({
     queryKey: ['tasks'],
     queryFn: async () => {
-      const response = await axios.get(`${API_BASE_URL}/api/tasks`, {
+      const response = await axios.get(`/api/tasks`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`
         }
@@ -31,7 +30,7 @@ export const useTasks = () => {
 
   const createMutation = useMutation({
     mutationFn: async (task: Omit<Task, 'id'>) => {
-      const response = await axios.post(`${API_BASE_URL}/api/tasks`, task, {
+      const response = await axios.post(`/api/tasks`, task, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`
         }
@@ -45,7 +44,7 @@ export const useTasks = () => {
 
   const updateMutation = useMutation({
     mutationFn: async (task: Task) => {
-      const response = await axios.put(`${API_BASE_URL}/api/tasks/${task.id}`, task, {
+      const response = await axios.put(`/api/tasks/${task.id}`, task, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`
         }
@@ -59,7 +58,7 @@ export const useTasks = () => {
 
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
-      await axios.delete(`${API_BASE_URL}/api/tasks/${id}`, {
+      await axios.delete(`/api/tasks/${id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`
         }
