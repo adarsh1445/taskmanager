@@ -4,10 +4,10 @@ import { useState } from "react"
 import { Calendar, MoreVertical, User2 } from "lucide-react"
 import type { Task } from "./task-dashboard"
 import { TaskForm } from "./task-form"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { Badge } from "../../components/ui/badge"
+import { Button } from "../../components/ui/button"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../../components/ui/dialog"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../../components/ui/dropdown-menu"
 
 interface TaskCardProps {
   task: Task

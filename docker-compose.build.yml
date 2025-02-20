@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: ./docker/dockerfile.frontend
+      args:
+        VITE_API_BASE_URL: "https://processitytaskmanagerdemo.info"
+    image: ${LOGIN_SERVER}/frontend:${FRONTEND_IMAGE_TAG}
+    container_name: frontend
+
+  backend:
+    build:
+      context: .
+      dockerfile: ./docker/dockerfile.api
+    image: ${LOGIN_SERVER}/backend:${BACKEND_IMAGE_TAG}
+    container_name: backend

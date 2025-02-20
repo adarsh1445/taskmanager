@@ -5,9 +5,9 @@ import { Plus } from "lucide-react"
 import { TaskList } from "./task-list"
 import { TaskForm } from "./task-form"
 import { Navbar } from "./navbar"
-import { Button } from "@/components/ui/button"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { useTasks } from "@/hooks/pre-fetch"
+import { Button } from "../../components/ui/button"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../../components/ui/dialog"
+import { useTasks } from "../../hooks/pre-fetch"
 
 export type Task = {
   id: string
@@ -62,7 +62,7 @@ export function TaskDashboard() {
           <div>
             <p className="text-muted-foreground">Manage your tasks and track progress</p>
           </div>
-          <Button onClick={() => setIsCreateDialogOpen(true)}>
+          <Button data-testid="add-task-button" onClick={() => setIsCreateDialogOpen(true)}>
             <Plus className="mr-2 h-4 w-4" />
             Add Task
           </Button>

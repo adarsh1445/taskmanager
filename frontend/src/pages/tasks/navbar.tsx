@@ -1,7 +1,7 @@
 import { User, LogOut } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { useAuth } from "@/hooks/use-auth"
+import { Button } from "../../components/ui/button"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../../components/ui/dropdown-menu"
+import { useAuth } from "../../hooks/use-auth"
 
 export function Navbar() {
   const { user, logout } = useAuth()
