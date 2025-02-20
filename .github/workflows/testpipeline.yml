@@ -8,7 +8,11 @@ on:
     tags:
       - 'v*'
 
-
+env:
+      ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
 
 jobs:
   run-tests:
@@ -126,10 +130,7 @@ jobs:
           TF_VAR_frontend_image: ${{ env.FRONTEND_IMAGE }}
           TF_VAR_frontend_image_tag: ${{ env.TAG_VERSION }}
           TF_VAR_acr_name: ${{ env.ACR_NAME }}
-          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-          ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+          
 
   cleanup:
     runs-on: ubuntu-latest
