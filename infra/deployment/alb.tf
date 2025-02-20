@@ -214,7 +214,7 @@ resource "azurerm_application_gateway" "main" {
 
   request_routing_rule {
     name               = "http-rule" # Add this if missing
-    rule_type          = "Basic"
+    rule_type          = "PathBasedRouting"
     http_listener_name = "http-listener"
     priority           = 1
     url_path_map_name  = "url-path-map"

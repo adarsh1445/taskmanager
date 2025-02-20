@@ -1,7 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import axios from 'axios'
 
-const API_BASE_URL = "https://04ec-122-178-147-126.ngrok-free.app"
 
 interface User {
   email: string
@@ -21,7 +20,7 @@ export const useAuth = () => {
     queryKey: [AUTH_QUERY_KEY],
     queryFn: async () => {
       try {
-        const response = await axios.get(`${API_BASE_URL}/api/me`, {
+        const response = await axios.get(`/api/me`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`
           }
@@ -35,7 +34,7 @@ export const useAuth = () => {
 
   const loginMutation = useMutation({
     mutationFn: async ({ email, password }: LoginData) => {
-      const response = await axios.post(`${API_BASE_URL}/api/login`, {
+      const response = await axios.post(`$/api/login`, {
         email,
         password
       })
@@ -49,7 +48,7 @@ export const useAuth = () => {
 
   const registerMutation = useMutation({
     mutationFn: async ({ email, password }: LoginData) => {
-      const response = await axios.post(`${API_BASE_URL}/api/register`, {
+      const response = await axios.post(`/api/register`, {
         email,
         password
       })
