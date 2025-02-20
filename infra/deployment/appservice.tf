@@ -69,6 +69,7 @@ resource "azurerm_linux_web_app" "backend" {
   app_settings = {
     "DATABASE_URL"  = "postgresql://${var.admin_username}:${var.admin_password}@${azurerm_postgresql_flexible_server.postgres.fqdn}:5432/postgres?sslmode=require"
     "WEBSITES_PORT" = "8000"
+    "SECRET_KEY"    = "testkey"
 
   }
 

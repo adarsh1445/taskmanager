@@ -125,14 +125,13 @@ jobs:
           TF_VAR_app_service_plan_name: ${{ env.APP_SERVICE_PLAN_NAME }}
           TF_VAR_backend_app_name: ${{ env.BACKEND_APP_NAME }}
           TF_VAR_frontend_app_name: ${{ env.FRONTEND_APP_NAME }}
-          TF_VAR_acr_login_server: ${{ env.ACR_LOGIN_SERVER }}
+          TF_VAR_acr_login_server: ${{ secrets.ACR_LOGIN_SERVER }}
           TF_VAR_backend_image: ${{ env.BACKEND_IMAGE }}
           TF_VAR_backend_image_tag: ${{ env.TAG_VERSION }}
           TF_VAR_frontend_image: ${{ env.FRONTEND_IMAGE }}
           TF_VAR_frontend_image_tag: ${{ env.TAG_VERSION }}
           TF_VAR_acr_name: ${{ env.ACR_NAME }}
           ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-          ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
           ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 

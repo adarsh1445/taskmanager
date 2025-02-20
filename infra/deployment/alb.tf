@@ -30,44 +30,6 @@ resource "azurerm_public_ip" "appgw" {
   }
 }
 
-resource "azurerm_key_vault" "main" {
-  name                        = "kv-azure"
-  location                    = data.azurerm_resource_group.existing.location
-  resource_group_name         = data.azurerm_resource_group.existing.name
-  enabled_for_disk_encryption = true
-  tenant_id                   = data.azurerm_client_config.current.tenant_id
-  sku_name                    = "standard"
-
-  access_policy {
-    tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = data.azurerm_client_config.current.object_id
-
-    certificate_permissions = [
-      "Create", "Delete", "DeleteIssuers", "Get", "GetIssuers", "Import", "List", "ListIssuers",
-      "ManageContacts", "ManageIssuers", "SetIssuers", "Update"
-    ]
-  }
-
-  network_acls {
-    default_action = "Allow"         # Or "Deny" based on your security requirements
-    bypass         = "AzureServices" # Allow trusted services to bypass
-  }
-
-  lifecycle {
-    prevent_destroy = false # Allow deletion
-  }
-}
-
-resource "azurerm_key_vault_certificate" "ssl" {
-  name         = "ssl-certificate1"
-  key_vault_id = azurerm_key_vault.main.id
-
-  certificate {
-    contents = filebase64(var.pfx_path)
-    password = var.certificate_password
-  }
-}
-
 resource "azurerm_web_application_firewall_policy" "appgw_waf" {
   name                = "wafpolicy-${var.domain_name}"
   resource_group_name = data.azurerm_resource_group.existing.name
@@ -129,10 +91,10 @@ resource "azurerm_application_gateway" "main" {
     public_ip_address_id = azurerm_public_ip.appgw.id
   }
 
-  ssl_certificate {
-    name                = "ssl-cert"
-    key_vault_secret_id = azurerm_key_vault_certificate.ssl.secret_id
-  }
+  # ssl_certificate {
+  #   name                = "ssl-cert"
+  #   key_vault_secret_id = azurerm_key_vault_certificate.ssl.secret_id
+  # }
 
   # HTTP Listener (Redirect to HTTPS)
   http_listener {
@@ -185,21 +147,23 @@ resource "azurerm_application_gateway" "main" {
 
   # HTTP Settings
   backend_http_settings {
-    name                  = "frontend-settings"
-    cookie_based_affinity = "Disabled"
-    port                  = 443
-    protocol              = "Https"
-    request_timeout       = 60
-    probe_name            = "frontend-probe"
+    name                                = "frontend-settings"
+    cookie_based_affinity               = "Disabled"
+    port                                = 443
+    protocol                            = "Https"
+    request_timeout                     = 60
+    probe_name                          = "frontend-probe"
+    pick_host_name_from_backend_address = true
   }
 
   backend_http_settings {
-    name                  = "backend-settings"
-    cookie_based_affinity = "Disabled"
-    port                  = 443
-    protocol              = "Https"
-    request_timeout       = 60
-    probe_name            = "backend-probe"
+    name                                = "backend-settings"
+    cookie_based_affinity               = "Disabled"
+    port                                = 443
+    protocol                            = "Https"
+    request_timeout                     = 60
+    probe_name                          = "backend-probe"
+    pick_host_name_from_backend_address = true
   }
 
   # Routing Rules
@@ -213,7 +177,7 @@ resource "azurerm_application_gateway" "main" {
   }
 
   request_routing_rule {
-    name               = "http-rule" # Add this if missing
+    name               = "http-rule"
     rule_type          = "PathBasedRouting"
     http_listener_name = "http-listener"
     priority           = 1
@@ -242,12 +206,10 @@ resource "azurerm_application_gateway" "main" {
   }
 
   depends_on = [
-    azurerm_key_vault_certificate.ssl,
     azurerm_linux_web_app.frontend,
     azurerm_linux_web_app.backend,
     azurerm_public_ip.appgw,
-    azurerm_subnet.appgw,
-    azurerm_key_vault_access_policy.appgw
+    azurerm_subnet.appgw
   ]
 
   lifecycle {
@@ -262,13 +224,51 @@ resource "azurerm_user_assigned_identity" "appgw" {
 }
 
 # Key Vault Access Policy for App Gateway
-resource "azurerm_key_vault_access_policy" "appgw" {
-  key_vault_id = azurerm_key_vault.main.id
-  tenant_id    = data.azurerm_client_config.current.tenant_id
-  object_id    = azurerm_user_assigned_identity.appgw.principal_id
+# resource "azurerm_key_vault_access_policy" "appgw" {
+#   key_vault_id = azurerm_key_vault.main.id
+#   tenant_id    = data.azurerm_client_config.current.tenant_id
+#   object_id    = azurerm_user_assigned_identity.appgw.principal_id
 
-  secret_permissions = [
-    "Get"
-  ]
-  certificate_permissions = ["Get"]
-}
+#   secret_permissions = [
+#     "Get"
+#   ]
+#   certificate_permissions = ["Get"]
+# }
+
+# resource "azurerm_key_vault" "main" {
+#   name                        = "kv-azure"
+#   location                    = data.azurerm_resource_group.existing.location
+#   resource_group_name         = data.azurerm_resource_group.existing.name
+#   enabled_for_disk_encryption = true
+#   tenant_id                   = data.azurerm_client_config.current.tenant_id
+#   sku_name                    = "standard"
+
+#   access_policy {
+#     tenant_id = data.azurerm_client_config.current.tenant_id
+#     object_id = data.azurerm_client_config.current.object_id
+
+#     certificate_permissions = [
+#       "Create", "Delete", "DeleteIssuers", "Get", "GetIssuers", "Import", "List", "ListIssuers",
+#       "ManageContacts", "ManageIssuers", "SetIssuers", "Update"
+#     ]
+#   }
+
+#   network_acls {
+#     default_action = "Allow"
+#     bypass         = "AzureServices"
+#   }
+
+#   lifecycle {
+#     prevent_destroy = false # Allow deletion
+#   }
+# }
+
+# resource "azurerm_key_vault_certificate" "ssl" {
+#   name         = "ssl-certificate1"
+#   key_vault_id = azurerm_key_vault.main.id
+
+#   certificate {
+#     contents = filebase64(var.pfx_path)
+#     password = var.certificate_password
+#   }
+# }
