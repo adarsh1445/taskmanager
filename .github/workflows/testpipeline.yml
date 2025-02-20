@@ -8,15 +8,7 @@ on:
     tags:
       - 'v*'
 
-env:
-  ACR_LOGIN_SERVER: acrtestunique1234567.azurecr.io
-  RESOURCE_GROUP_NAME: myResourceGroup123
-  APP_SERVICE_PLAN_NAME: myAppServicePlan
-  BACKEND_APP_NAME: mybackendapp12345
-  FRONTEND_APP_NAME: myfrontendapp12345
-  ACR_NAME: acrtestunique1234567
-  BACKEND_IMAGE: backend
-  FRONTEND_IMAGE: frontend
+
 
 jobs:
   run-tests:
@@ -139,14 +131,12 @@ jobs:
   cleanup:
     runs-on: ubuntu-latest
     if: always()
-    needs: >
-      ${{ 
-        startsWith(github.ref, 'refs/tags/') && 
-        [build-push-tagged, deploy-infrastructure] || 
-        github.event_name == 'push' && github.ref == 'refs/heads/main' && 
-        [run-tests, build-push-latest] || 
-        [run-tests] 
-      }}
+    needs: ${{ 
+      startsWith(github.ref, 'refs/tags/') 
+        ? ['build-push-tagged', 'deploy-infrastructure'] 
+        : (github.event_name == 'push' && github.ref == 'refs/heads/main' 
+          ? ['run-tests', 'build-push-latest'] 
+          : ['run-tests']) }}
     steps:
       - name: Prune Docker resources
         run: |
