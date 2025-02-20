@@ -48,6 +48,11 @@ resource "azurerm_key_vault" "main" {
     ]
   }
 
+  network_acls {
+    default_action = "Allow"         # Or "Deny" based on your security requirements
+    bypass         = "AzureServices" # Allow trusted services to bypass
+  }
+
   lifecycle {
     prevent_destroy = false # Allow deletion
   }
@@ -232,7 +237,8 @@ resource "azurerm_application_gateway" "main" {
     azurerm_linux_web_app.frontend,
     azurerm_linux_web_app.backend,
     azurerm_public_ip.appgw,
-    azurerm_subnet.appgw
+    azurerm_subnet.appgw,
+    azurerm_key_vault_access_policy.appgw
   ]
 
   lifecycle {
@@ -252,7 +258,8 @@ resource "azurerm_key_vault_access_policy" "appgw" {
   tenant_id    = data.azurerm_client_config.current.tenant_id
   object_id    = azurerm_user_assigned_identity.appgw.principal_id
 
-  certificate_permissions = [
+  # Correct from certificate_permissions to secret_permissions
+  secret_permissions = [
     "Get"
   ]
 }
