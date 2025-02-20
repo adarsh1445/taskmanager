@@ -20,6 +20,8 @@ services:
       - ./tmp/:/root/.npm/_logs/
     working_dir: /app
     command: sh -c " npm install && npm run start"
+    environment:
+      - DEV_PORT=5173 
  
 
   backend:
