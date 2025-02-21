@@ -110,7 +110,6 @@ resource "azurerm_application_gateway" "main" {
     frontend_ip_configuration_name = "appgw-frontend-ip"
     frontend_port_name             = "https"
     protocol                       = "Https"
-    ssl_certificate_name           = "ssl-cert"
   }
 
   # Backend Pools
