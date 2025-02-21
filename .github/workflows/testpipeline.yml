@@ -9,10 +9,10 @@ on:
       - 'v*'
 
 env:
-      ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-      ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-      ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+  ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+  ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+  ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+  ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
 
 jobs:
   run-tests:
@@ -62,11 +62,11 @@ jobs:
           FRONTEND_IMAGE_TAG: "latest"
           LOGIN_SERVER: ${{ secrets.ACR_LOGIN_SERVER }}
 
-   build-push-tagged:
+  build-push-tagged:
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/')
     outputs:
-      tag_version: ${{ steps.extract_version.outputs.TAG_VERSION }}  # Define an output
+      tag_version: ${{ steps.extract_version.outputs.tag_version }}
     steps:
       - uses: actions/checkout@v3
       
@@ -85,15 +85,15 @@ jobs:
       
       - name: Extract version tag
         id: extract_version
-        run: echo "TAG_VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV && echo "TAG_VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+        run: echo "tag_version=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV && echo "tag_version=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
       
       - name: Build and push versioned images
         run: |
           docker-compose -f docker-compose.build.yml build
           docker-compose -f docker-compose.build.yml push
         env:
-          BACKEND_IMAGE_TAG: ${{ env.TAG_VERSION }}
-          FRONTEND_IMAGE_TAG: ${{ env.TAG_VERSION }}
+          BACKEND_IMAGE_TAG: ${{ env.tag_version }}
+          FRONTEND_IMAGE_TAG: ${{ env.tag_version }}
           LOGIN_SERVER: ${{ secrets.ACR_LOGIN_SERVER }}
 
   deploy-infrastructure:
@@ -101,7 +101,7 @@ jobs:
     needs: build-push-tagged
     if: startsWith(github.ref, 'refs/tags/')
     env:
-      TAG_VERSION: ${{ needs.build-push-tagged.outputs.tag_version }}  # Retrieve the output
+      TAG_VERSION: ${{ needs.build-push-tagged.outputs.tag_version }}
     steps:
       - uses: actions/checkout@v3
       
@@ -110,9 +110,9 @@ jobs:
 
       - name: Decode and Encode SSL Certificate
         run: |
-            echo "${{ secrets.SSL_CERT_BASE64 }}" | base64 -d > ssl-cert.pfx
-            export SSL_CERT_BASE64_ENCODED=$(base64 -w 0 ssl-cert.pfx)
-            echo "SSL_CERT_BASE64_ENCODED=$SSL_CERT_BASE64_ENCODED" >> $GITHUB_ENV
+          echo "${{ secrets.SSL_CERT_BASE64 }}" | base64 -d > ssl-cert.pfx
+          export SSL_CERT_BASE64_ENCODED=$(base64 -w 0 ssl-cert.pfx)
+          echo "SSL_CERT_BASE64_ENCODED=$SSL_CERT_BASE64_ENCODED" >> $GITHUB_ENV
 
       - name: Terraform Init
         working-directory: infra/deployment
@@ -134,7 +134,6 @@ jobs:
           TF_VAR_acr_name: ${{ env.ACR_NAME }}
           TF_VAR_ssl_cert_base64: ${{ env.SSL_CERT_BASE64_ENCODED }}
           TF_VAR_ssl_cert_password: ${{ secrets.SSL_CERT_PASSWORD }}
-          
 
   cleanup:
     runs-on: ubuntu-latest
