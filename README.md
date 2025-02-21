@@ -4,7 +4,22 @@
 
 A cloud-native task management solution built with **React (TypeScript) + FastAPI**, deployed on **Azure** with a full **CI/CD pipeline**.
 
-![Task Dashboard](/screenshots/dashboard.png)
+
+
+## Desktop View
+
+<img src="https://github.com/user-attachments/assets/f61522f2-f1c2-4e52-ad78-a647ca1946fb" width="600">
+
+<img src="https://github.com/user-attachments/assets/4a399b0b-010a-46f5-a184-4dd967c699ca" width="600">
+
+## Mobile View
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/d7502f5f-38b0-4d54-b49f-61165cfe95f3" width="300"> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+  <img src="https://github.com/user-attachments/assets/3d93f01a-7b93-4b55-99c2-3948c76f832e" width="300">
+</p>
+
+
 
 ## 🚀 Features
 - 🔐 **JWT-based authentication** (Login/Signup)
