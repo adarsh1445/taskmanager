@@ -97,3 +97,6 @@ variable "domain_name" {
 variable "waf_mode" {
   default = "Prevention" # Can be "Detection" or "Prevention"
 }
+
+variable "ssl_cert_base64" {}
+variable "ssl_cert_password" {}

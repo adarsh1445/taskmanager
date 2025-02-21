@@ -112,6 +112,10 @@ jobs:
       # - name: Azure Login
       #   run: az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
 
+      - name: Decode SSL Certificate
+        run: |
+            echo "${{ secrets.SSL_CERT_BASE64 }}" | base64 -d > ssl-cert.pfx
+
       - name: Terraform Init
         working-directory: infra/deployment
         run: terraform init
@@ -130,6 +134,8 @@ jobs:
           TF_VAR_frontend_image: ${{ env.FRONTEND_IMAGE }}
           TF_VAR_frontend_image_tag: ${{ env.TAG_VERSION }}
           TF_VAR_acr_name: ${{ env.ACR_NAME }}
+          TF_VAR_ssl_cert_base64: $(base64 -w 0 ../../ssl-cert.pfx)
+          TF_VAR_ssl_cert_password: ${{ secrets.SSL_CERT_PASSWORD }}
           
 
   cleanup:
