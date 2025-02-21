@@ -93,14 +93,6 @@ variable "domain_name" {
   default = "processitytaskmanagerdemo.info"
 }
 
-variable "certificate_password" {
-  sensitive = true
-}
-
-variable "pfx_path" {
-   type    = string
-  default = "certificate.pfx"
-}
 
 variable "waf_mode" {
   default = "Prevention" # Can be "Detection" or "Prevention"
