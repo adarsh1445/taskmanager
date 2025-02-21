@@ -91,11 +91,10 @@ resource "azurerm_application_gateway" "main" {
     public_ip_address_id = azurerm_public_ip.appgw.id
   }
 
-  # ssl_certificate {
-  #   name                = "ssl-cert"
-  #   key_vault_secret_id = azurerm_key_vault_certificate.ssl.secret_id
-  # }
-
+  ssl_certificate {
+    name                = "ssl-cert"
+    key_vault_secret_id = data.azurerm_key_vault_certificate.ssl.secret_id
+  }
   # HTTP Listener (Redirect to HTTPS)
   http_listener {
     name                           = "http-listener"
@@ -110,6 +109,7 @@ resource "azurerm_application_gateway" "main" {
     frontend_ip_configuration_name = "appgw-frontend-ip"
     frontend_port_name             = "https"
     protocol                       = "Https"
+    ssl_certificate_name           = "ssl-cert"
   }
 
   # Backend Pools
@@ -222,17 +222,29 @@ resource "azurerm_user_assigned_identity" "appgw" {
   location            = data.azurerm_resource_group.existing.location
 }
 
-# Key Vault Access Policy for App Gateway
-# resource "azurerm_key_vault_access_policy" "appgw" {
-#   key_vault_id = azurerm_key_vault.main.id
-#   tenant_id    = data.azurerm_client_config.current.tenant_id
-#   object_id    = azurerm_user_assigned_identity.appgw.principal_id
 
-#   secret_permissions = [
-#     "Get"
-#   ]
-#   certificate_permissions = ["Get"]
-# }
+data "azurerm_key_vault" "main" {
+  name                = "certptKeyVault"
+  resource_group_name = "myResourceGroup123"
+}
+
+data "azurerm_key_vault_certificate" "ssl" {
+  name         = "mySslCert"
+  key_vault_id = data.azurerm_key_vault.main.id
+}
+
+
+# Key Vault Access Policy for App Gateway
+resource "azurerm_key_vault_access_policy" "appgw" {
+  key_vault_id = data.azurerm_key_vault.main.id
+  tenant_id    = data.azurerm_client_config.current.tenant_id
+  object_id    = azurerm_user_assigned_identity.appgw.principal_id
+
+  secret_permissions = [
+    "Get"
+  ]
+  certificate_permissions = ["Get"]
+}
 
 # resource "azurerm_key_vault" "main" {
 #   name                        = "kv-azure"
