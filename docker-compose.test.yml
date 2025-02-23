@@ -29,6 +29,8 @@ services:
       dockerfile: ./docker/dockerfile.api
     ports:
       - "8000:8000"
+    volumes:
+      - ./backend/app:/app/
     working_dir: /app
     environment:
       - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/testdatabase

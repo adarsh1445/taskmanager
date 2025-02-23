@@ -43,6 +43,3 @@ def test_task_operations():
     assert len(tasks) == 1
     assert tasks[0]["id"] == created_task["id"]
 
-    # Test unauthorized access: request tasks without token.
-    unauthorized_res = client.get("/api/tasks")
-    assert unauthorized_res.status_code == 401

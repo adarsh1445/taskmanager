@@ -36,7 +36,7 @@ def login(user: UserLogin, db: Session = Depends(get_db)):
                         value=access_token, 
                         max_age= 30 * 60,
                         httponly=True,
-                        secure=True,
+                        secure=False,
                         samesite="Strict"
                         )
     response.set_cookie(
@@ -44,7 +44,7 @@ def login(user: UserLogin, db: Session = Depends(get_db)):
         value=user.email,
         max_age= 30 * 60,
         httponly=True,
-        secure=True,
+        secure=False,
         samesite="Strict"
     )
     return response
