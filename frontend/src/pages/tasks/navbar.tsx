@@ -19,7 +19,7 @@ export function Navbar() {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem className="font-medium">{user?.email || "User"}</DropdownMenuItem>
-            <DropdownMenuItem onClick={logout}>
+            <DropdownMenuItem onClick={() => logout.mutate()}>
               <LogOut className="mr-2 h-4 w-4" />
               Logout
             </DropdownMenuItem>
